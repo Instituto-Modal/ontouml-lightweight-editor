@@ -129,6 +129,7 @@ import br.ufes.inf.nemo.oled.statistician.StatisticsPane;
 import br.ufes.inf.nemo.oled.ui.ClosableTabPanel;
 import br.ufes.inf.nemo.oled.ui.StartPanel;
 import br.ufes.inf.nemo.oled.ui.commands.EcoreExporter;
+import br.ufes.inf.nemo.oled.ui.commands.OntoprologExporter;
 import br.ufes.inf.nemo.oled.ui.commands.PngExporter;
 import br.ufes.inf.nemo.oled.ui.commands.ProjectReader;
 import br.ufes.inf.nemo.oled.ui.commands.ProjectWriter;
@@ -201,6 +202,7 @@ public class DiagramManager extends JTabbedPane implements SelectionListener, Ed
 	public String lastImportEcorePath = new String();
 	public String lastExportEcorePath = new String();
 	public String lastExportUMLPath = new String();
+	public String lastExportOntoprologPath = new String();
 	
 	/** Get Frame */
 	public AppFrame getFrame() { return frame; }
@@ -1292,6 +1294,29 @@ public class DiagramManager extends JTabbedPane implements SelectionListener, Ed
 			}
 		}
 	}	
+	
+	public void exportOntoprolog() 
+	{
+		if(getCurrentEditor() != null) {
+			JFileChooser fileChooser = new JFileChooser(lastExportOntoprologPath);
+			fileChooser.setDialogTitle(getResourceString("dialog.ontoprolog.title"));
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Ontoprolog (*.pl)", "pl");
+			fileChooser.addChoosableFileFilter(filter);
+			fileChooser.setFileFilter(filter);
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				if (fileChooser.getFileFilter() == filter) {
+					try {
+						OntoprologExporter exporter = new OntoprologExporter();
+						exporter.writeOntoprolog(this, fileChooser.getSelectedFile(), getCurrentEditor().getProject());
+						lastExportOntoprologPath = fileChooser.getSelectedFile().getAbsolutePath();
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(this, ex.getMessage(),getResourceString("dialog.exportecore.title"), JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		}
+	}
 
 	/** Export the current model as an UML2 instance file (EMF-implementation of UML)
 	 *  This exporting loses all the UML stereotypes that distinguishes OntoUML from UML*/
@@ -1299,15 +1324,17 @@ public class DiagramManager extends JTabbedPane implements SelectionListener, Ed
 	{
 		if(getCurrentEditor() != null) {
 			JFileChooser fileChooser = new JFileChooser(lastExportUMLPath);
-			fileChooser.setDialogTitle("Export as UML");
+			fileChooser.setDialogTitle("Export as EOQ");
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("UML2 (*.uml)", "uml");
 			fileChooser.addChoosableFileFilter(filter);
 			fileChooser.setFileFilter(filter);
 			fileChooser.setAcceptAllFileFilterUsed(false);
+			System.out.println("Teste");
 			if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 				if (fileChooser.getFileFilter() == filter) {
 					try {
 						UMLExporter exporter = new UMLExporter();
+						System.out.println(exporter);
 						exporter.writeUML(this, fileChooser.getSelectedFile());
 						lastExportUMLPath = fileChooser.getSelectedFile().getAbsolutePath();
 					} catch (Exception ex) {

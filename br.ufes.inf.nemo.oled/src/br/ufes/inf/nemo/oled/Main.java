@@ -64,10 +64,10 @@ public final class Main {
 	
 	public static AppFrame frame; 
 
-	public static String OLED_VERSION = "2.1.0"; 
-	public static String OLED_COMPILATION_DATE = "June 08 2017";	
+	public static String OLED_VERSION = "2.1.1"; 
+	public static String OLED_COMPILATION_DATE = "Mar 06 2020";	
 	
-	public static boolean USE_LOG_FILE = false;
+	public static boolean USE_LOG_FILE = true;
 	public static PrintStream psOut;
 	public static PrintStream psErr;
 	

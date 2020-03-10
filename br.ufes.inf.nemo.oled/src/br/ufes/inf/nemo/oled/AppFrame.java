@@ -326,6 +326,8 @@ public class AppFrame extends JFrame implements AppCommandListener {
 					new MethodCall(DiagramManager.class.getMethod("exportUML")));
 			selectorMap.put("IMPORT_ECORE",
 					new MethodCall(DiagramManager.class.getMethod("importEcore")));
+			selectorMap.put("EXPORT_ONTOPROLOG",
+					new MethodCall(DiagramManager.class.getMethod("exportOntoprolog")));
 			selectorMap.put("IMPORT_PATTERN",
 					new MethodCall(DiagramManager.class.getMethod("importPattern")));
 			selectorMap.put("IMPORT_XMI",

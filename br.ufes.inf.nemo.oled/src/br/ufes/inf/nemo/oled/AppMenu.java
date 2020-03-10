@@ -186,6 +186,9 @@ public class AppMenu implements ActionListener {
 		
 		JMenuItem umlItem = createMenuItem(exportMenu, "exportuml");
 		umlItem.setToolTipText("Export to Eclipse MDT UML2 version 4");
+		
+		JMenuItem ontoprologItem = createMenuItem(exportMenu, "exportontoprolog");
+		ontoprologItem.setToolTipText("Export to Ontoprolog");
 
 		//createMenuItem(exportMenu, "exportpatterns");
 		
@@ -235,6 +238,7 @@ public class AppMenu implements ActionListener {
 		
 		createMenuItem(exportMenu, "exportecore");
 		createMenuItem(exportMenu, "exportocl");		
+		createMenuItem(exportMenu, "exportontoprolog");	
 	}
 
 	/**
