@@ -1308,7 +1308,7 @@ public class DiagramManager extends JTabbedPane implements SelectionListener, Ed
 				if (fileChooser.getFileFilter() == filter) {
 					try {
 						OntoprologExporter exporter = new OntoprologExporter();
-						exporter.writeOntoprolog(this, fileChooser.getSelectedFile(), getCurrentEditor().getProject());
+						exporter.writeOntoprolog(this, fileChooser.getSelectedFile(), getCurrentDiagramEditor());
 						lastExportOntoprologPath = fileChooser.getSelectedFile().getAbsolutePath();
 					} catch (Exception ex) {
 						JOptionPane.showMessageDialog(this, ex.getMessage(),getResourceString("dialog.exportecore.title"), JOptionPane.ERROR_MESSAGE);
@@ -1334,7 +1334,6 @@ public class DiagramManager extends JTabbedPane implements SelectionListener, Ed
 				if (fileChooser.getFileFilter() == filter) {
 					try {
 						UMLExporter exporter = new UMLExporter();
-						System.out.println(exporter);
 						exporter.writeUML(this, fileChooser.getSelectedFile());
 						lastExportUMLPath = fileChooser.getSelectedFile().getAbsolutePath();
 					} catch (Exception ex) {
