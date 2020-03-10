@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 import RefOntoUML.Element;
 import RefOntoUML.Namespace;
+import br.ufes.inf.nemo.oled.draw.Connection;
 import br.ufes.inf.nemo.oled.draw.DiagramElement;
 import br.ufes.inf.nemo.oled.model.UmlDiagram;
 import br.ufes.inf.nemo.oled.model.UmlProject;
@@ -71,6 +73,7 @@ public class OntoprologExporter {
 		String pattern = "^<<(\\w+)>>\\s?(\\w+)$";
 		Pattern r = Pattern.compile(pattern);
 		for(DiagramElement c: diagram.getChildren()) {
+			if (diagram.getConnections().contains(c)) continue;
 			Matcher m = r.matcher(c.toString());
 			if (m.find()) result += m.group(2) + " :: " + m.group(1) + "\n";
 		}
