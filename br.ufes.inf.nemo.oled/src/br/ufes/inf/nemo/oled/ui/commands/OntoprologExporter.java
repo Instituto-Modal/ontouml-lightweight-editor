@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,6 +24,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 import RefOntoUML.Element;
 import RefOntoUML.Namespace;
+import br.ufes.inf.nemo.oled.Main;
+import br.ufes.inf.nemo.oled.OntoprologExceptionType;
 import br.ufes.inf.nemo.oled.draw.Connection;
 import br.ufes.inf.nemo.oled.draw.DiagramElement;
 import br.ufes.inf.nemo.oled.model.UmlDiagram;
@@ -36,6 +40,8 @@ import br.ufes.inf.nemo.oled.util.ModelHelper;
  * This class exports a diagram to a Owl File.
  */
 public class OntoprologExporter {
+	
+	private List<String> filterEntitys = Arrays.asList("category", "collective", "kind", "mixin", "mode", "phase", "quantity", "role", "role mixin", "subkind");
 
 	/**
 	 * Export the editor graphics to a file in PNG format.
@@ -55,7 +61,12 @@ public class OntoprologExporter {
 				out = new BufferedWriter(fstream);
 				out.write(this.getHeaderFile());
 						
-				out.write(this.diagramToOntoprolog(diagram.getDiagram()));
+				try {
+					out.write(this.diagramToOntoprolog(diagram.getDiagram()));					
+				} catch (OntoprologExceptionType e) {
+					Main.printOutLine("Error to ontoprolog code: "+e.getMessage());	
+					JOptionPane.showMessageDialog(null, "Error to generate ontoprolog code:\n"+e.getMessage(), ApplicationResources.getInstance().getString("error.readfile.title"), JOptionPane.ERROR_MESSAGE);
+				}
 					
 				out.write(this.getFooterFile());
 			} catch (IOException e) {
@@ -68,14 +79,25 @@ public class OntoprologExporter {
 		}
 	}
 	
-	private String diagramToOntoprolog(StructureDiagram diagram) {
+	private String diagramToOntoprolog(StructureDiagram diagram) throws OntoprologExceptionType {
 		String result = "";
 		String pattern = "^<<(\\w+)>>\\s?(\\w+)$";
 		Pattern r = Pattern.compile(pattern);
 		for(DiagramElement c: diagram.getChildren()) {
 			if (diagram.getConnections().contains(c)) continue;
-			Matcher m = r.matcher(c.toString());
-			if (m.find()) result += m.group(2) + " :: " + m.group(1) + "\n";
+			Matcher m = r.matcher(c.toString().toLowerCase());
+			if (m.find()) {
+				String type = m.group(1);
+				if (!this.filterEntitys.contains(type))
+					throw new OntoprologExceptionType("Tipo de entidade não suportada: " + type);
+				
+				result += m.group(2) + " :: " + m.group(1) + "\n";
+				
+				List<Connection> connections = (List<Connection>)((ClassElement)c).getConnections();
+				for(Connection con: connections) {
+					String aux = con.toString();
+				}
+			}
 		}
 		return result;
 	}
